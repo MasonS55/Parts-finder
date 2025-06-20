@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AutoFinder - Upload Parts</title>
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f4f4f4;
+    }
+    header, footer {
+      background-color: #222;
+      color: white;
+      padding: 10px 20px;
+    }
+    nav a {
+      color: white;
+      margin: 0 10px;
+      text-decoration: none;
+    }
+    .upload-section {
+      background-color: #fff;
+      padding: 20px;
+      max-width: 800px;
+      margin: auto;
+      margin-top: 30px;
+      border-radius: 5px;
+    }
+    form input, form select, form textarea, form button {
+      display: block;
+      margin: 10px 0;
+      padding: 10px;
+      width: 100%;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>AutoFinder</h1>
+    <nav>
+      <a href="index.html">Search Parts</a>
+      <a href="#">Login</a>
+    </nav>
+  </header>
+
+  <section class="upload-section">
+    <h2>Upload a Vehicle Part</h2>
+    <form id="upload-form" enctype="multipart/form-data">
+      <!-- Seller Type -->
+      <select name="sellerType" id="sellerType" required>
+        <option value="">Seller Type</option>
+        <option value="yard">Registered Salvage Yard</option>
+        <option value="individual">Private Individual</option>
+      </select>
+
+      <!-- Optional Yard Name -->
+      <input type="text" name="yardName" id="yardName" placeholder="Yard Name" style="display: none;" />
+
+      <!-- Vehicle Info -->
+      <select name="vehicleType" required>
+        <option value="">Select Vehicle Type</option>
+        <option value="car">Car</option>
+        <option value="suv">SUV</option>
+        <option value="truck">Truck</option>
+        <option value="bus">Bus</option>
+      </select>
+
+      <input type="text" name="make" placeholder="Vehicle Make (e.g. Toyota)" required />
+      <input type="text" name="model" placeholder="Model (e.g. Corolla)" required />
+      <input type="text" name="year" placeholder="Year (e.g. 2015)" />
+
+      <!-- Part Details -->
+      <select name="partType" required>
+        <option value="">Select Part Type</option>
+        <option value="engine">Engine</option>
+        <option value="body">Body Panels</option>
+        <option value="rims">Rims</option>
+        <option value="tyres">Tyres</option>
+        <option value="airbags">Airbags</option>
+        <option value="interior">Interior</option>
+        <option value="ecu">Computer Boxes (ECU)</option>
+      </select>
+
+      <textarea name="description" placeholder="Describe the part condition, compatibility, or special notes" rows="4"></textarea>
+      <input type="number" name="price" placeholder="Price (ZAR)" required />
+      <input type="text" name="location" placeholder="Salvage Yard or Seller Location" required />
+      <input type="file" name="images" accept="image/*" multiple />
+
+      <!-- Delivery Option -->
+      <select name="deliveryAvailable">
+        <option value="">Delivery Option</option>
+        <option value="pickup">Pick-Up Only</option>
+        <option value="uber">Uber Collection</option>
+        <option value="bolt">Bolt Collection</option>
+        <option value="mr D">Mr D Collection</option>
+      </select>
+
+      <button type="submit">Upload Part</button>
+    </form>
+  </section>
+
+  <footer>
+    <p>&copy; 2025 AutoFinder. All rights reserved.</p>
+  </footer>
+
+  <script>
+    // Toggle yard name field
+    const sellerType = document.getElementById('sellerType');
+    const yardNameField = document.getElementById('yardName');
+
+    sellerType.addEventListener('change', () => {
+      yardNameField.style.display = sellerType.value === 'yard' ? 'block' : 'none';
+    });
+
+    // Basic client-side validation
+    document.getElementById('upload-form').addEventListener('submit', function(event) {
+      const form = event.target;
+      const requiredFields = ['sellerType', 'vehicleType', 'make', 'model', 'year', 'partType', 'price', 'location'];
+      let valid = true;
+
+      requiredFields.forEach(fieldName => {
+        const field = form.elements[fieldName];
+        if (!field || !field.value.trim()) {
+          if (field) field.style.border = '2px solid red';
+          valid = false;
+        } else {
+          field.style.border = '';
+        }
+      });
+
+      const files = form.elements['images'].files;
+      for (let file of files) {
+        if (!file.type.startsWith('image/')) {
+          alert("Only image files are allowed.");
+          valid = false;
+          break;
+        }
+      }
+
+      if (!valid) {
+        event.preventDefault();
+        alert("Please fix the highlighted fields.");
+      }
+    });
+  </script>
+</body>
+</html>

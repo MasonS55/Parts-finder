@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>AutoFinder - Search Parts</title>
+
+  <style>
+    /* === Global Styles === */
+    body {
+      font-family: "Segoe UI", sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f2f2f2;
+    }
+
+    h1, h2 {
+      text-align: center;
+      color: #222;
+    }
+
+    /* === Navbar === */
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background-color: #222;
+      padding: 12px 20px;
+      flex-wrap: wrap;
+    }
+
+    .logo {
+      font-size: 22px;
+      color: white;
+      font-weight: bold;
+    }
+
+    .nav-links {
+      list-style: none;
+      display: flex;
+      gap: 20px;
+      margin: 0;
+      padding: 0;
+    }
+
+    .nav-links li a {
+      color: white;
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    .nav-links li a:hover {
+      text-decoration: underline;
+    }
+
+    /* === Search Section === */
+    .search-section {
+      max-width: 800px;
+      margin: 30px auto;
+      padding: 20px;
+      background-color: #fff;
+      border-radius: 6px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    form input,
+    form select,
+    form button {
+      width: 100%;
+      padding: 12px;
+      margin: 10px 0;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      box-sizing: border-box;
+    }
+
+    form button {
+      background-color: #0066cc;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+
+    form button:hover {
+      background-color: #004a99;
+    }
+
+    /* === Listings Section === */
+    #results {
+      max-width: 800px;
+      margin: 30px auto;
+      padding: 20px;
+      background: #fff;
+      border-radius: 6px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+    }
+
+    .listing-card {
+      display: flex;
+      background-color: #fff;
+      border: 1px solid #ddd;
+      margin: 15px 0;
+      border-radius: 6px;
+      overflow: hidden;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    }
+
+    .listing-card img {
+      width: 150px;
+      height: 150px;
+      object-fit: cover;
+      border-right: 1px solid #ccc;
+    }
+
+    .listing-info {
+      padding: 15px;
+      flex: 1;
+    }
+
+    .listing-info h3 {
+      margin-top: 0;
+      color: #333;
+    }
+
+    .listing-info p {
+      margin: 5px 0;
+      font-size: 15px;
+    }
+
+    /* === Buttons === */
+    .toggle-contact,
+    .save-listing {
+      display: inline-block;
+      margin-top: 10px;
+      margin-right: 8px;
+      padding: 8px 16px;
+      border: none;
+      background-color: #0066cc;
+      color: white;
+      font-weight: bold;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    .toggle-contact:hover,
+    .save-listing:hover {
+      background-color: #004a99;
+    }
+
+    .whatsapp-btn, .email-btn {
+      display: inline-block;
+      margin-top: 10px;
+      margin-right: 8px;
+      padding: 10px 15px;
+      background-color: #25D366;
+      color: white;
+      text-decoration: none;
+      border-radius: 4px;
+      font-weight: bold;
+      transition: background-color 0.3s ease;
+    }
+
+    .email-btn {
+      background-color: #444;
+    }
+
+    .whatsapp-btn:hover {
+      background-color: #1da851;
+    }
+
+    .email-btn:hover {
+      background-color: #333;
+    }
+
+    .contact-options {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.4s ease-in-out, padding 0.3s ease-in-out;
+    }
+
+    .contact-options.show {
+      max-height: 200px;
+      padding-top: 10px;
+    }
+
+    /* === Footer === */
+    footer {
+      background-color: #222;
+      color: white;
+      text-align: center;
+      padding: 15px 0;
+      margin-top: 40px;
+    }
+
+    /* === Mobile === */
+    @media (max-width: 600px) {
+      .navbar {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .nav-links {
+        flex-direction: column;
+        width: 100%;
+        padding: 10px 0;
+        gap: 10px;
+      }
+
+      .listing-card {
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .listing-card img {
+        width: 100%;
+        height: auto;
+        border-right: none;
+        border-bottom: 1px solid #ccc;
+      }
+
+      .listing-info {
+        padding: 15px;
+        text-align: center;
+      }
+
+      .toggle-contact, .save-listing, .whatsapp-btn, .email-btn {
+        width: 100%;
+        margin: 10px 0;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <nav class="navbar">
+      <div class="logo">AutoFinder</div>
+      <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="upload.html">Upload</a></li>
+        <li><a href="#">My Listings</a></li>
+        <li><a href="#" onclick="showSavedListings()">Saved</a></li>
+        <li><a href="#">Login</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <section class="search-section">
+    <h2>Find Second-Hand Car Parts</h2>
+    <form id="search-form">
+      <select name="vehicleType" required>
+        <option value="">Select Vehicle Type</option>
+        <option value="car">Car</option>
+        <option value="suv">SUV</option>
+        <option value="truck">Truck</option>
+        <option value="bus">Bus</option>
+      </select>
+
+      <input type="text" name="make" placeholder="Vehicle Make (e.g. Toyota)" required />
+      <input type="text" name="model" placeholder="Model (e.g. Corolla)" required />
+      <input type="text" name="year" placeholder="Year (e.g. 2015)" />
+
+      <select name="partType" required>
+        <option value="">Select Part Type</option>
+        <option value="engine">Engine</option>
+        <option value="body">Body Panels</option>
+        <option value="rims">Rims</option>
+        <option value="tyres">Tyres</option>
+        <option value="airbags">Airbags</option>
+        <option value="interior">Interior</option>
+        <option value="ecu">Computer Boxes (ECU)</option>
+      </select>
+
+      <button type="submit">Search</button>
+    </form>
+  </section>
+
+  <section id="results">
+    <h2>Search Results</h2>
+    <p>Use the form above to find listings.</p>
+  </section>
+
+  <footer>
+    <p>&copy; 2025 AutoFinder. All rights reserved.</p>
+  </footer>
+
+  <script>
+    const listings = [
+      {
+        id: 1,
+        title: "Engine – Toyota Hilux 2015",
+        seller: "Registered Salvage Yard",
+        price: "ZAR 5,500",
+        location: "Johannesburg",
+        vehicleType: "truck",
+        partType: "engine",
+        image: "sample-part.jpg",
+        whatsapp: "27731234567",
+        email: "seller@example.com"
+      },
+            {
+        id: 2,
+        title: "Rims – Ford Ranger",
+        seller: "Private Individual",
+        price: "ZAR 2,000",
+        location: "Pretoria",
+        vehicleType: "truck",
+        partType: "rims",
+        image: "sample-rim.jpg",
+        whatsapp: "27739876543",
+        email: "fordrims@example.com"
+      }
+    ];
+
+    const resultsSection = document.getElementById("results");
+
+    document.getElementById("search-form").addEventListener("submit", function (e) {
+      e.preventDefault();
+      const partType = this.elements["partType"].value.toLowerCase();
+      const vehicleType = this.elements["vehicleType"].value.toLowerCase();
+
+      const matches = listings.filter(item =>
+        item.partType.includes(partType) && item.vehicleType === vehicleType
+      );
+
+      renderResults(matches);
+    });
+
+    function renderResults(matches) {
+      if (!matches.length) {
+        resultsSection.innerHTML = "<h2>Search Results</h2><p>No parts found.</p>";
+        return;
+      }
+
+      resultsSection.innerHTML = "<h2>Search Results</h2>" + matches.map(item => `
+        <div class="listing-card">
+          <img src="${item.image}" alt="Part image" />
+          <div class="listing-info">
+            <h3>${item.title}</h3>
+            <p><strong>Seller:</strong> ${item.seller}</p>
+            <p><strong>Location:</strong> ${item.location}</p>
+            <p><strong>Price:</strong> ${item.price}</p>
+            <button class="toggle-contact">View Details</button>
+            <button class="save-listing" data-id="${item.id}">⭐ Save Listing</button>
+            <div class="contact-options contact-options-${item.id}">
+              <a href="https://wa.me/${item.whatsapp}" target="_blank" class="whatsapp-btn">Contact via WhatsApp</a>
+              <a href="mailto:${item.email}" class="email-btn">Email Seller</a>
+            </div>
+          </div>
+        </div>
+      `).join("");
+
+      document.querySelectorAll('.toggle-contact').forEach(button => {
+        button.addEventListener('click', () => {
+          const contact = button.nextElementSibling.nextElementSibling;
+          contact.classList.toggle('show');
+        });
+      });
+    }
+
+    // Save listing to localStorage
+    document.addEventListener("click", function (e) {
+      if (e.target.classList.contains("save-listing")) {
+        const id = e.target.getAttribute("data-id");
+        let saved = JSON.parse(localStorage.getItem("savedListings")) || [];
+        if (!saved.includes(id)) {
+          saved.push(id);
+          localStorage.setItem("savedListings", JSON.stringify(saved));
+          alert("Saved!");
+        } else {
+          alert("Already saved.");
+        }
+      }
+    });
+
+    // Show saved listings
+    function showSavedListings() {
+      const savedIds = JSON.parse(localStorage.getItem("savedListings")) || [];
+      const savedItems = listings.filter(item => savedIds.includes(item.id.toString()));
+      renderResults(savedItems);
+    }
+  </script>
+</body>
+</html>
